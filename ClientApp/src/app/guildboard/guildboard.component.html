@@ -1,0 +1,22 @@
+<div [hidden] = "showQuest(false)"> <p>{{quest?.name}}</p>
+  <p>{{quest?.description}}</p>
+  <p>{{quest?.reward}}</p>
+  <button (click)="backToList()">Back to List</button>
+  <button (click)="deleteQuest()">deleteQuest</button>
+</div>
+
+<div [hidden] = "showQuest(true)">
+  <button (click)="directTo('/guildboard/add')">Add Quest</button>
+  <mat-grid-list cols="5">
+          <ng-container>
+            <mat-grid-tile (click)="displayQuest($event, item, '/')" *ngFor="let item of quests">
+              <mat-grid-tile-header>{{item.name}}</mat-grid-tile-header>
+              <div>
+                  <p>{{item.description}}</p>
+                  <p>{{item.reward}}</p>
+              </div>
+              <mat-grid-tile-footer> {{item.complete ? 'Complete: ' + item.complete : 'In Progress'}}</mat-grid-tile-footer>
+            </mat-grid-tile>
+          </ng-container>
+  </mat-grid-list>
+</div>
