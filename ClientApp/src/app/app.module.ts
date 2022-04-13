@@ -13,6 +13,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { ProfileComponent } from './profile/profile.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AddQuestComponent } from './add-quest/add-quest.component';
+import { EditQuestComponent } from './edit-quest/edit-quest.component';
 
 //ng g c ComponentName --module src/app
 @NgModule({
@@ -24,7 +25,8 @@ import { AddQuestComponent } from './add-quest/add-quest.component';
     FetchDataComponent,
     GuildboardComponent,
     ProfileComponent,
-    AddQuestComponent
+    AddQuestComponent,
+    EditQuestComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -35,6 +37,7 @@ import { AddQuestComponent } from './add-quest/add-quest.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'guildboard', component: GuildboardComponent },
       { path: 'guildboard/add', component: AddQuestComponent },
+      { path: 'guildboard/edit/:id', component: EditQuestComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },

@@ -47,9 +47,6 @@ namespace Guild.Migrations
                     b.Property<int>("Reward")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UsersId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Quests");
@@ -73,9 +70,6 @@ namespace Guild.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("QuestsId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -98,13 +92,13 @@ namespace Guild.Migrations
 
             modelBuilder.Entity("QuestUser", b =>
                 {
-                    b.HasOne("Guild.Models.Quest", null)
+                    b.HasOne("Guild.User", null)
                         .WithMany()
                         .HasForeignKey("QuestsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Guild.User", null)
+                    b.HasOne("Guild.Models.Quest", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)

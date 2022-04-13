@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Guild.Models
 {
@@ -11,8 +12,8 @@ namespace Guild.Models
         public string Description { get; set; } = String.Empty;
         [Range(0, int.MaxValue)]
         public int Reward { get; set; }
-        public int? UsersId { get; set; }
-        public ICollection<User>? Users { get; set; } = new List<User>();
+        [ForeignKey("UsersId")]
+        public virtual ICollection<User>? Users { get; set; } = new List<User>();
         public DateTime CreatedDateTime { get; set; } = DateTime.Now;
         public DateTime? CompletedDateTime { get; set; }
     }

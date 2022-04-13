@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {Quests} from '../guildboard/quests.model';
+import {Quest} from '../../models/quest.model';
 
 @Component({
   selector: 'app-add-quest',
@@ -11,11 +11,7 @@ import {Quests} from '../guildboard/quests.model';
 export class AddQuestComponent implements OnInit {
   private http: HttpClient;
   private baseUrl: string;
-  public quest: any = {
-    name: "",
-    description: "",
-    reward: null
-  };
+  public quest: Quest = new Quest;
   constructor(private router: Router,
     private _http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
     this.http = _http;
@@ -26,7 +22,7 @@ export class AddQuestComponent implements OnInit {
   }
 
   onSubmit() {
-    this.http.post<Quests[]>(this.baseUrl + 'api/quests', this.quest).subscribe(result => {
+    this.http.post<Quest>(this.baseUrl + 'api/quests', this.quest).subscribe(result => {
       this.quest = result;
       this.router.navigate([`${'guildboard'}`]);
     }, error => console.error(error));
