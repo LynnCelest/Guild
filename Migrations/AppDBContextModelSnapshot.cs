@@ -17,10 +17,66 @@ namespace Guild.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Guild.Member", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<float>("Currency")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Member");
+                });
+
+            modelBuilder.Entity("Guild.Models.MemberQuest", b =>
+                {
+                    b.Property<int>("MemberId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("QuestId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("MemberId", "QuestId");
+
+                    b.HasIndex("QuestId");
+
+                    b.ToTable("MemberQuest");
+                });
 
             modelBuilder.Entity("Guild.Models.Quest", b =>
                 {
@@ -44,65 +100,41 @@ namespace Guild.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Reward")
-                        .HasColumnType("int");
+                    b.Property<float>("Reward")
+                        .HasColumnType("real");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Quests");
+                    b.ToTable("Quest");
                 });
 
-            modelBuilder.Entity("Guild.User", b =>
+            modelBuilder.Entity("Guild.Models.MemberQuest", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Currency")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("QuestUser", b =>
-                {
-                    b.Property<int>("QuestsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("QuestsId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("QuestUser");
-                });
-
-            modelBuilder.Entity("QuestUser", b =>
-                {
-                    b.HasOne("Guild.User", null)
-                        .WithMany()
-                        .HasForeignKey("QuestsId")
+                    b.HasOne("Guild.Member", "Member")
+                        .WithMany("MemberQuests")
+                        .HasForeignKey("MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Guild.Models.Quest", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
+                    b.HasOne("Guild.Models.Quest", "Quest")
+                        .WithMany("MemberQuests")
+                        .HasForeignKey("QuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Quest");
+                });
+
+            modelBuilder.Entity("Guild.Member", b =>
+                {
+                    b.Navigation("MemberQuests");
+                });
+
+            modelBuilder.Entity("Guild.Models.Quest", b =>
+                {
+                    b.Navigation("MemberQuests");
                 });
 #pragma warning restore 612, 618
         }

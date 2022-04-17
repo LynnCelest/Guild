@@ -2,12 +2,12 @@
   <p>{{quest?.description}}</p>
   <p>{{quest?.reward}}</p>
   <button (click)="backToList()">Back to List</button>
-  <button (click)="directToEdit('/guildboard/edit')">Edit Quest</button>
+  <button (click)="directToId('/guildboard/edit')">Edit Quest</button>
   <button (click)="deleteQuest()">deleteQuest</button>
 </div>
 
 <div *ngIf = "!quest">
-  <button (click)="directToAdd('/guildboard/add')">Add Quest</button>
+  <button (click)="directTo('/guildboard/add')">Add Quest</button>
   <mat-grid-list cols="5">
           <ng-container>
             <mat-grid-tile (click)="displayQuest($event, item, '/')" *ngFor="let item of quests">

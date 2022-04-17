@@ -13,7 +13,7 @@ export class EditQuestComponent implements OnInit {
   private baseUrl: string;
   public completed: boolean = false;
   public quest: Quest = new Quest;
-  public value?: number;
+  public idValue?: number;
   constructor(private router: Router,
     private _http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
     this.http = _http;
@@ -28,13 +28,13 @@ export class EditQuestComponent implements OnInit {
   }
 
   onSubmit() {
-    this.value = this.quest!.id;
+    this.idValue = this.quest!.id;
     if(this.quest.completedDateTime && !this.completed) {
       this.quest.completedDateTime = undefined;
     } else if(!this.quest.completedDateTime && this.completed) {
       this.quest.completedDateTime = new Date;
     }
-    this.http.put<Quest>(this.baseUrl + 'api/quests/' + this.value, this.quest).subscribe(result => {
+    this.http.put<Quest>(this.baseUrl + 'api/quests/' + this.idValue, this.quest).subscribe(result => {
       this.quest = result;
       this.router.navigate([`${'guildboard'}`]);
     }, error => console.error(error));

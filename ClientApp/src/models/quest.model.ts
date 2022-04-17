@@ -1,11 +1,11 @@
-import { User } from "./user.model";
+import { Member } from "./member.model";
 
 export class Quest {
     id?: number;
     name: string = "";
     description: string = "";
     reward: number = 0;
-    users?: User[];
+    members?: Member[];
     createdDateTime?: Date;
     completedDateTime?: Date;
   }

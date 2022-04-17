@@ -26,14 +26,14 @@ namespace Guild.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Quest>>> GetQuests()
         {
-            return await _context.Quests.ToListAsync();
+            return await _context.Quest.ToListAsync();
         }
 
         // GET: api/Quests/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Quest>> GetQuest(int id)
         {
-            var quest = await _context.Quests.FindAsync(id);
+            var quest = await _context.Quest.FindAsync(id);
 
             if (quest == null)
             {
@@ -79,7 +79,7 @@ namespace Guild.Controllers
         [HttpPost]
         public async Task<ActionResult<Quest>> PostQuest(Quest quest)
         {
-            _context.Quests.Add(quest);
+            _context.Quest.Add(quest);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetQuest", new { id = quest.Id }, quest);
@@ -89,13 +89,13 @@ namespace Guild.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteQuest(int id)
         {
-            var quest = await _context.Quests.FindAsync(id);
+            var quest = await _context.Quest.FindAsync(id);
             if (quest == null)
             {
                 return NotFound();
             }
 
-            _context.Quests.Remove(quest);
+            _context.Quest.Remove(quest);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -103,7 +103,7 @@ namespace Guild.Controllers
 
         private bool QuestExists(int id)
         {
-            return _context.Quests.Any(e => e.Id == id);
+            return _context.Quest.Any(e => e.Id == id);
         }
     }
 }
