@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Guild.Data;
 using Guild.Models;
+using Microsoft.Data.SqlClient;
 
 namespace Guild.Controllers
 {
@@ -46,7 +47,7 @@ namespace Guild.Controllers
         // PUT: api/Quests/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuest(int id, Quest quest)
+        public async Task<ActionResult<Quest>> PutQuest(int id, Quest quest)
         {
             if (id != quest.Id)
             {
@@ -71,7 +72,19 @@ namespace Guild.Controllers
                 }
             }
 
-            return NoContent();
+            Quest result = new Quest();
+            IEnumerable<Quest> curQuest = _context.Quest.FromSqlRaw(
+                "SELECT * " +
+                "FROM Quest " +
+                "WHERE Id = @Id", new SqlParameter("@Id", id));
+
+            if (curQuest.Count() > 0)
+            {
+                result = curQuest.ElementAt<Quest>(0);
+            }
+
+            return result;
+            /*return NoContent();*/
         }
 
         // POST: api/Quests
