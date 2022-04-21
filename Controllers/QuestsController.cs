@@ -26,7 +26,7 @@ namespace Guild.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Quest>>> GetQuests()
         {
-            return await _context.Quest.ToListAsync();
+            return await _context.Quest.Include(q => q.MemberQuests).ThenInclude(mq => mq.Member).ToListAsync();
         }
 
         // GET: api/Quests/5

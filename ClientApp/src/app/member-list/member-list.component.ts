@@ -29,7 +29,7 @@ export class MemberListComponent implements OnInit {
     }, error => console.error(error));
     this.http = _http;
     this.baseUrl = _baseUrl;
-    this.displayedColumns = ['name', 'email', 'gender', 'address', 'currency']; 
+    this.displayedColumns = ['id', 'name', 'email', 'gender', 'address', 'currency']; 
  }
 
   ngOnInit(): void {

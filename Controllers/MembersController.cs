@@ -53,7 +53,7 @@ namespace Guild.Controllers
             for (int i = 0; i < members.Length; i++) {
                 Member member = members[i];
                 int status = _context.Database.ExecuteSqlRaw(
-                    "UPDATE Members " +
+                    "UPDATE Member " +
                     "SET Name = @Name, " +
                     "Gender = @Gender, " +
                     "Email = @Email, " +
@@ -69,7 +69,7 @@ namespace Guild.Controllers
 
                 IEnumerable<Member> curMember = _context.Member.FromSqlRaw(
                     "SELECT * " +
-                    "FROM Members " +
+                    "FROM Member " +
                     "WHERE Id = @Id", new SqlParameter("@Id", member.Id));
 
                 if (curMember.Count() > 0) {

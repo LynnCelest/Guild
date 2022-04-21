@@ -6,12 +6,11 @@ namespace Guild.Models
 {
     public class MemberQuest
     {
-        [Key]
-        public int Id { get; set; }
         public int QuestId { get; set; }
-        public virtual Quest Quest { get; set; }
+        public virtual Quest? Quest { get; set; }
         public int MemberId { get; set; }
-        public virtual Member Member { get; set; }
+        public virtual Member? Member { get; set; }
+        public bool IsAdmin { get; set; }
         public int Score { get; set; }
     }
 }

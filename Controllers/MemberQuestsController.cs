@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Guild.Data;
 using Guild.Models;
+using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Guild.Controllers
 {
@@ -41,6 +43,43 @@ namespace Guild.Controllers
             }
 
             return memberQuest;
+        }
+
+        // PUT: api/MemberQuests
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut]
+        public async Task<ActionResult<IEnumerable<MemberQuest>>> PutMembers(MemberQuest[] MemberQuests)
+        {
+            MemberQuest[] result = new MemberQuest[MemberQuests.Length];
+            for (int i = 0; i < MemberQuests.Length; i++)
+            {
+                MemberQuest memberQuest = MemberQuests[i];
+                int status = _context.Database.ExecuteSqlRaw(
+                    "UPDATE MemberQuest " +
+                    "SET Score = @Score " +
+                    "WHERE MemberId = @MemberId " +
+                    "AND QuestId = @QuestId", new SqlParameter[] {
+                        new SqlParameter("@Score", memberQuest.Score),
+                        new SqlParameter("@MemberId", memberQuest.MemberId),
+                        new SqlParameter("@QuestId", memberQuest.QuestId)});
+
+                IEnumerable<MemberQuest> curMemberQuest = _context.MemberQuest.FromSqlRaw(
+                    "SELECT * " +
+                    "FROM MemberQuest " +
+                    "WHERE MemberId = @MemberId " +
+                    "AND QuestId = @QuestId", new SqlParameter[] {
+                        new SqlParameter("@Score", memberQuest.Score),
+                        new SqlParameter("@MemberId", memberQuest.MemberId),
+                        new SqlParameter("@QuestId", memberQuest.QuestId)})
+                    .Include(mq => mq.Member).Include(mq => mq.Quest);
+
+                if (curMemberQuest.Count() > 0)
+                {
+                    result[i] = curMemberQuest.ElementAt<MemberQuest>(0);
+                }
+            }
+
+            return result;
         }
 
         // PUT: api/MemberQuests/5
@@ -99,11 +138,20 @@ namespace Guild.Controllers
             return CreatedAtAction("GetMemberQuest", new { id = memberQuest.MemberId }, memberQuest);
         }
 
-        // DELETE: api/MemberQuests/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMemberQuest(int id)
+        // DELETE: api/MemberQuests/byIds?questId=1&memberId=2
+        [HttpDelete("byIds")]
+        public async Task<IActionResult> DeleteMemberQuest(int questId, int memberId)
         {
-            var memberQuest = await _context.MemberQuest.FindAsync(id);
+            int status = _context.Database.ExecuteSqlRaw(
+                "DELETE FROM MemberQuest " +
+                "WHERE MemberId = @MemberId " +
+                "AND QuestId = @QuestId", new SqlParameter[] {
+                    new SqlParameter("@MemberId", memberId),
+                    new SqlParameter("@QuestId", questId)});
+
+            return Ok();
+
+            /*var memberQuest = await _context.MemberQuest.FindAsync(id);
             if (memberQuest == null)
             {
                 return NotFound();
@@ -112,7 +160,7 @@ namespace Guild.Controllers
             _context.MemberQuest.Remove(memberQuest);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return NoContent();*/
         }
 
         private bool MemberQuestExists(int id)

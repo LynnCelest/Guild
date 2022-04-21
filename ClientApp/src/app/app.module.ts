@@ -13,17 +13,18 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 
 import { AppComponent } from './app.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { CounterComponent } from './sample/counter/counter.component';
+import { FetchDataComponent } from './sample/fetch-data/fetch-data.component';
 import { GuildboardComponent } from './guildboard/guildboard.component';
 import { HomeComponent } from './home/home.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { ProfileComponent } from './profile/profile.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AddQuestComponent } from './add-quest/add-quest.component';
-import { EditQuestComponent } from './edit-quest/edit-quest.component';
+import { AddQuestComponent } from './guildboard/add-quest/add-quest.component';
+import { EditQuestComponent } from './guildboard/edit-quest/edit-quest.component';
 import { MemberListComponent } from './member-list/member-list.component';
-import { AddMemberComponent } from './add-member/add-member.component';
+import { AddMemberComponent } from './member-list/add-member/add-member.component';
+import { AccountComponent } from './account/account.component';
+import { StoreService } from 'src/store';
 
 //ng g c ComponentName --module src/app
 @NgModule({
@@ -34,11 +35,11 @@ import { AddMemberComponent } from './add-member/add-member.component';
     CounterComponent,
     FetchDataComponent,
     GuildboardComponent,
-    ProfileComponent,
     AddQuestComponent,
     EditQuestComponent,
     MemberListComponent,
-    AddMemberComponent
+    AddMemberComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,16 +56,16 @@ import { AddMemberComponent } from './add-member/add-member.component';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'guildboard', component: GuildboardComponent },
       { path: 'memberlist', component: MemberListComponent },
+      { path: 'login', component: AccountComponent },
       { path: 'guildboard/add', component: AddQuestComponent },
       { path: 'memberlist/add', component: AddMemberComponent },
       { path: 'guildboard/edit/:id', component: EditQuestComponent },
-      { path: 'profile', component: ProfileComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
     ]),
     NoopAnimationsModule
   ],
-  providers: [],
+  providers: [StoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

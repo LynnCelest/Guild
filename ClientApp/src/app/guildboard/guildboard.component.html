@@ -1,16 +1,77 @@
-<div *ngIf = "quest"> <p>{{quest?.name}}</p>
+<div *ngIf = "quest"> 
+  <p>{{quest?.name}}</p>
   <p>{{quest?.description}}</p>
   <p>{{quest?.reward}}</p>
-  <button (click)="backToList()">Back to List</button>
+  <div *ngIf = "!adminQuest?.isAdmin">
+    <div *ngIf = "!adminQuest"> 
+      <button (click)="switchEntry()">Join Quest</button>
+    </div>
+    <div *ngIf = "adminQuest">
+      <button (click)="switchEntry()">Abandon Quest</button>
+    </div>
+  </div>
   <button (click)="directToId('/guildboard/edit')">Edit Quest</button>
-  <button (click)="deleteQuest()">deleteQuest</button>
+  <div *ngIf = "adminQuest?.isAdmin">
+    <form #testForm="ngForm" (ngSubmit)="testForm.form.valid" novalidate>  
+      <mat-card>  
+          <mat-card-header>  
+              <mat-card-title>Quester List</mat-card-title>  
+              <mat-card-subtitle>Update Member Scores</mat-card-subtitle>  
+          </mat-card-header>
+  
+          <mat-card-content>  
+              <mat-table [dataSource]="memberQuests">  
+                <ng-container matColumnDef="id">  
+                  <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>  
+                  <mat-cell *matCellDef="let memberQuest; let rowIdx = index;">
+                    <p>{{memberQuest.member.id}}</p>
+                  </mat-cell>  
+              </ng-container>
+              
+              <ng-container matColumnDef="name">  
+                  <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>  
+                  <mat-cell *matCellDef="let memberQuest; let rowIdx = index;">   
+                    <p>{{memberQuest.member.name}}</p>
+                  </mat-cell>  
+              </ng-container>
+
+              <ng-container matColumnDef="score">  
+                  <mat-header-cell *matHeaderCellDef>Score</mat-header-cell>  
+                  <mat-cell *matCellDef="let memberQuest; let rowIdx = index;">  
+                      <mat-form-field>  
+                          <mat-label></mat-label>  
+                          <input matInput #currency="ngModel"
+                              type="number"
+                              name="txtCurrency{{rowIdx}}" 
+                              placeholder="Score"  
+                              [(ngModel)]="memberQuest.score"
+                              min="0" 
+                              required>
+                      </mat-form-field>  
+                  </mat-cell>  
+              </ng-container>
+  
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>  
+              <mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"></mat-row>  
+          </mat-table>  
+      </mat-card-content>  
+      
+      <mat-card-actions>  
+          <button mat-raised-button color="primary" [disabled]="testForm.invalid" (click)="onSubmit(testForm);">SAVE</button>  
+      </mat-card-actions>  
+      </mat-card>  
+    </form>
+  </div>
+  <div>
+    <button (click)="backToList()">Back to List</button>
+  </div>
 </div>
 
 <div *ngIf = "!quest">
   <button (click)="directTo('/guildboard/add')">Add Quest</button>
   <mat-grid-list cols="5">
           <ng-container>
-            <mat-grid-tile (click)="displayQuest($event, item, '/')" *ngFor="let item of quests">
+            <mat-grid-tile (click)="detailQuest($event, item, '/')" *ngFor="let item of quests">
               <mat-grid-tile-header>{{item.name}}</mat-grid-tile-header>
               <div>
                   <p>{{item.description}}</p>

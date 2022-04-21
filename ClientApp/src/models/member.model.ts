@@ -1,4 +1,4 @@
-import { Quest } from "./quest.model";
+import { MemberQuest } from "./memberquest.model";
 
 export class Member {
     id?: number;
@@ -7,6 +7,6 @@ export class Member {
     email: string = "";
     address: string = "";
     currency: number = 0;
-    quests?: Quest[];
+    memberQuests: MemberQuest[] = [];
     createdDateTime?: Date;
 }

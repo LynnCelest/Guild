@@ -1,0 +1,9 @@
+<h1>Log In</h1>
+<form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="id">Enter your Id</label>
+        <input type="number" id="id" name="id" 
+        required [(ngModel)]="member.id" min="0">
+    </div>
+    <button [disabled]="!loginForm.form.valid" type="Submit">Log In</button>
+</form>
