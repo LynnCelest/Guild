@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {Member} from '../../models/member.model';
-import {StoreService} from '../../store'
+import { Member } from '../../models/member.model';
+import { StoreService } from '../../store';
 
 @Component({
   selector: 'app-account',
@@ -12,7 +12,7 @@ import {StoreService} from '../../store'
 export class AccountComponent implements OnInit {
   private http: HttpClient;
   private baseUrl: string;
-  public member: Member = new Member;
+  public idValue: number = 0;
   public store: StoreService;
   constructor(private router: Router, _store: StoreService,
     private _http: HttpClient, @Inject('BASE_URL') _baseUrl: string) {
@@ -25,9 +25,8 @@ export class AccountComponent implements OnInit {
   }
 
   onSubmit() {
-    this.member.name = "Login";
-    this.http.post<Member>(this.baseUrl + 'api/account', this.member).subscribe(result => {
-      this.member = result;
+    this.ngOnInit();
+    this.http.get<Member>(this.baseUrl + 'api/members/' + this.idValue).subscribe(result => {
       this.store.member = result;
       this.router.navigate([`${'guildboard'}`]);
     }, error => console.error(error));

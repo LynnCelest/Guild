@@ -30,11 +30,10 @@ namespace Guild.Controllers
             _context = context;
         }
 
-        // POST api/<AccountController>
+        /*// POST api/<AccountController>
         [HttpPost]
         public async Task<ActionResult<Member>> Post(Member member)
         {
-            if (User.Identity.IsAuthenticated) await HttpContext.SignOutAsync();
             Member sqlMember;
             IEnumerable<Member> curMember = _context.Member.FromSqlRaw(
                       "SELECT * " +
@@ -49,9 +48,11 @@ namespace Guild.Controllers
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 await HttpContext.SignInAsync(claimsPrincipal);
-                return sqlMember;
+                return Ok();
             }
-            return Ok();
-        }
+            return BadRequest();
+        }*/
     }
 }
+
+/*if (User.Identity.IsAuthenticated) await HttpContext.SignOutAsync();*/

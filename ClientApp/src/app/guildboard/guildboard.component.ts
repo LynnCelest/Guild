@@ -16,7 +16,7 @@ export class GuildboardComponent implements OnInit {
   private http: HttpClient;
   private baseUrl: string
   public quests: Quest[] = [];
-  public quest?: Quest = undefined;
+  public quest?: Quest;
   public idValue?: number;
   public memberQuests: MemberQuest[] = [];
   public adminQuest? : MemberQuest;
@@ -48,7 +48,7 @@ export class GuildboardComponent implements OnInit {
   deleteQuest() {
     this.idValue = this.quest!.id;
     this.http.delete<Quest[]>(this.baseUrl + 'api/quests/' + this.idValue).subscribe(result => {
-      this.quest = undefined;
+      this.quest = void 0;
       this.quests = this.quests.filter((value: Quest, index: number, array: Quest[])=> {
         if(value.id != this.idValue) return true;
         return false;
@@ -57,8 +57,8 @@ export class GuildboardComponent implements OnInit {
   }
 
   detailQuest(event: any, _quest: Quest, pageName:string){
-    if(this.quest == _quest){
-      this.quest = undefined;
+    if(this.quest === _quest){
+      this.quest = void 0;
     } else {
       this.quest = _quest;
       this.findQuesters(_quest, true)
@@ -72,13 +72,13 @@ export class GuildboardComponent implements OnInit {
       this.memberQuests.push(_quest.memberQuests[i]);
       if(setAdmin) {
         this.adminQuest = _quest?.memberQuests[i];
-        if(this.store.member?.id == this.adminQuest?.memberId) {
+        if(this.store.member?.id === this.adminQuest?.memberId) {
           setAdmin = false;
-        } else if(i == _quest?.memberQuests?.length -1) {
-          this.adminQuest = undefined;
+        } else if(i === _quest?.memberQuests?.length -1) {
+          this.adminQuest = void 0;
         }
       }
-      if(this.quest?.memberQuests[i].member != undefined) {
+      if(this.quest?.memberQuests[i].member != void 0) {
         this.members.push(_quest?.memberQuests[i].member!);
       }
     }
@@ -94,7 +94,7 @@ export class GuildboardComponent implements OnInit {
           }
           return true;
         });
-        this.adminQuest = undefined;
+        this.adminQuest = void 0;
     }, error => console.error(error));
     } else if(this.store.member) {
       this.adminQuest = {
@@ -121,6 +121,6 @@ export class GuildboardComponent implements OnInit {
   }
 
   backToList() {
-    this.quest = undefined;
+    this.quest = void 0;
   }
 }

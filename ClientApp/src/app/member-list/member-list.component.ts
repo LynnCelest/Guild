@@ -55,9 +55,10 @@ export class MemberListComponent implements OnInit {
 
   onSubmit(testForm: NgForm) {
     this.http.put<Member[]>(this.baseUrl + 'api/Members', this.pageSlice).subscribe(result => {
+      console.log(result);
       this.members.map((member: Member, index: number, array: Member[]) => {
         for(let i = 0; i < result.length; i++) {
-          if(member.id == result[i].id) {
+          if(member.id === result[i].id) {
             return result;
           }
         }

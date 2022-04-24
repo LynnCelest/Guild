@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Guild;
 using Guild.Data;
 using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Guild.Controllers
 {
@@ -50,34 +51,42 @@ namespace Guild.Controllers
         public async Task<ActionResult<IEnumerable<Member>>> PutMembers(Member[] members)
         {
             Member[] result = new Member[members.Length];
-            for (int i = 0; i < members.Length; i++) {
-                Member member = members[i];
-                int status = _context.Database.ExecuteSqlRaw(
-                    "UPDATE Member " +
-                    "SET Name = @Name, " +
-                    "Gender = @Gender, " +
-                    "Email = @Email, " +
-                    "Address = @Address, " +
-                    "Currency = @Currency " +
-                    "WHERE Id = @Id", new SqlParameter[] {
-                        new SqlParameter("@Name", member.Name), 
-                        new SqlParameter("@Gender", member.Gender),
-                        new SqlParameter("@Email", member.Email),  
-                        new SqlParameter("@Address", member.Address), 
-                        new SqlParameter("@Currency", member.Currency),
-                        new SqlParameter("@Id", member.Id)});
+            if (members.Length > 0)
+            {
+                string sqlBegin = "UPDATE mem SET " +
+                    "Name = q.Name, " +
+                    "Gender = q.Gender, " +
+                    "Email = q.Email, " +
+                    "Address = q.Address, " +
+                    "Currency = q.Currency " +
+                    "OUTPUT INSERTED.ID, INSERTED.Name, INSERTED.Gender, INSERTED.EMAIL, INSERTED.Address, INSERTED.Currency, INSERTED.CreatedDateTime " +
+                    "FROM Member mem " +
+                    "JOIN( VALUES";
+                string sqlMid = "";
+                string sqlEnd = ") q(Id, Name, Gender, Email, Address, Currency) ON q.Id = mem.Id ";
+                SqlParameter[] sqlParameters = new SqlParameter[members.Length * 6];
+                for (int i = 0; i < members.Length; i++)
+                {
+                    Member member = members[i];
 
-                IEnumerable<Member> curMember = _context.Member.FromSqlRaw(
-                    "SELECT * " +
-                    "FROM Member " +
-                    "WHERE Id = @Id", new SqlParameter("@Id", member.Id));
+                    sqlParameters[i * 6 + 0] = new SqlParameter("@Id" + i, member.Id);
+                    sqlParameters[i * 6 + 1] = new SqlParameter("@Name" + i, member.Name);
+                    sqlParameters[i * 6 + 2] = new SqlParameter("@Gender" + i, member.Gender);
+                    sqlParameters[i * 6 + 3] = new SqlParameter("@Email" + i, member.Email);
+                    sqlParameters[i * 6 + 4] = new SqlParameter("@Address" + i, member.Address);
+                    sqlParameters[i * 6 + 5] = new SqlParameter("@Currency" + i, member.Currency);
 
-                if (curMember.Count() > 0) {
-                    result[i] = curMember.ElementAt<Member>(0);
+                    sqlMid += " (@Id" + i +
+                        ", @Name" + i +
+                        ", @Gender" + i +
+                        ", @Email" + i +
+                        ", @Address" + i +
+                        ", @Currency" + i +
+                        (i == members.Length - 1 ? ")" : "),");
                 }
+                return _context.Member.FromSqlRaw(sqlBegin + sqlMid + sqlEnd, sqlParameters).ToList();
             }
-
-            return result;
+            return BadRequest();
         }
 
         // PUT: api/Members/5

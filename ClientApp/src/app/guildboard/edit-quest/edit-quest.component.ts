@@ -38,24 +38,24 @@ export class EditQuestComponent implements OnInit {
   onSubmit() {
     this.idValue = this.quest!.id;
     if(this.quest.completedDateTime && !this.completed) {
-      this.quest.completedDateTime = undefined;
+      this.quest.completedDateTime = void 0;
     } else if(!this.quest.completedDateTime && this.completed) {
       this.quest.completedDateTime = new Date;
     }
     this.http.put<Quest>(this.baseUrl + 'api/quests/' + this.idValue, this.quest).subscribe(result => {
       this.quest = result;
       if(result.completedDateTime){
-        for(let i = 0; i < this.members.length; i++) {
-          for(let j = 0; j < this.quest.memberQuests.length; j++){
-            if(this.members[i].id == this.quest.memberQuests[j].memberId) {
-              this.members[i].currency += this.quest.memberQuests[j].score * 100 / this.totalScore
+        for(const member of this.members) {
+          for(const memberQuest of this.quest.memberQuests) {
+            if(member.id === memberQuest.memberId) {
+              member.currency += memberQuest.score * 100 / this.totalScore;
             }
           }
         }
         this.http.put<Member[]>(this.baseUrl + 'api/Members', this.members).subscribe(result => {
           this.members.map((member: Member, index: number, array: Member[]) => {
             for(let i = 0; i < result.length; i++) {
-              if(member.id == result[i].id) {
+              if(member.id === result[i].id) {
                 return result;
               }
             }
