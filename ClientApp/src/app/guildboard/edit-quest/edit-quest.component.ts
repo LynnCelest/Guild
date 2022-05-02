@@ -35,8 +35,15 @@ export class EditQuestComponent implements OnInit {
     }
   }
 
+  deleteQuest() {
+    this.idValue = this.quest.id;
+    this.http.delete<Quest[]>(this.baseUrl + 'api/quests/' + this.idValue).subscribe(result => {
+      this.router.navigate([`${'guildboard'}`]);
+    }, error => console.error(error));
+  }
+
   onSubmit() {
-    this.idValue = this.quest!.id;
+    this.idValue = this.quest.id;
     if(this.quest.completedDateTime && !this.completed) {
       this.quest.completedDateTime = void 0;
     } else if(!this.quest.completedDateTime && this.completed) {

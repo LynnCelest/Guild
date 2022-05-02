@@ -45,17 +45,6 @@ export class GuildboardComponent implements OnInit {
     this.router.navigate([`${pageName}`, this.quest?.id], {state: {quest: this.quest}});
   }
 
-  deleteQuest() {
-    this.idValue = this.quest!.id;
-    this.http.delete<Quest[]>(this.baseUrl + 'api/quests/' + this.idValue).subscribe(result => {
-      this.quest = void 0;
-      this.quests = this.quests.filter((value: Quest, index: number, array: Quest[])=> {
-        if(value.id != this.idValue) return true;
-        return false;
-      });
-    }, error => console.error(error));
-  }
-
   detailQuest(event: any, _quest: Quest, pageName:string){
     if(this.quest === _quest){
       this.quest = void 0;
