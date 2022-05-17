@@ -13,7 +13,7 @@
         <button (click)="switchEntry()" class="btn btn-danger">Abandon Quest</button>
       </div>
     </div>
-    <div *ngIf = "adminQuest?.isAdmin" class="col-8">
+    <div *ngIf = "adminQuest?.isAdmin">
       <form #testForm="ngForm" (ngSubmit)="testForm.form.valid" novalidate>  
         <mat-card>  
             <mat-card-header>  
